@@ -24,7 +24,6 @@ final class BookController extends AbstractController
     }
 
     #[Route('/new', name: 'app_book_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $book = new Book();
@@ -53,7 +52,7 @@ final class BookController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_book_edit', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')] // Seul l'admin peut modifier
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Book $book, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(BookType::class, $book);

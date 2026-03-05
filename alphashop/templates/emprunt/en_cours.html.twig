@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}📅 Emprunts en cours{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    {# Critère : H1 avec le nombre total d'emprunts en cours #}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>📅 Emprunts en cours ({{ emprunts|length }})</h1>
+        <a href="{{ path('app_book_index') }}" class="btn btn-outline-secondary">Retour au catalogue</a>
+    </div>
+
+    {# Affichage des messages flash (Succès/Erreur) #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    <table class="table table-hover shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Livre</th>
+                {# On ne montre la colonne Emprunteur qu'à l'Admin #}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th>Emprunteur</th>
+                {% endif %}
+                <th>Date d'emprunt</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for emprunt in emprunts %}
+            <tr>
+                <td class="align-middle"><strong>{{ emprunt.book.titre }}</strong></td>
+                
+                {# Contenu de la colonne Emprunteur (Admin seulement) #}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <td class="align-middle">
+                        {{ emprunt.user.nom }} <br>
+                        <small class="text-muted">{{ emprunt.user.email }}</small>
+                    </td>
+                {% endif %}
+
+                <td class="align-middle">{{ emprunt.dateEmprunt|date('d/m/Y H:i') }}</td>
+                <td class="align-middle">
+                    {% if emprunt.dateRetour is null %}
+                        <span class="badge" style="background-color: #ffc107; color: #000; padding: 8px;">
+                            EN_COURS
+                        </span>
+                    {% endif %}
+                </td>
+                <td class="align-middle">
+                    <a href="{{ path('app_emprunt_rendre', {'id': emprunt.id}) }}" 
+                       class="btn btn-sm btn-success" 
+                       onclick="return confirm('Confirmer le retour de ce livre ?')">
+                       Rendre le livre
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5" class="text-center py-4 text-muted">
+                    Aucun emprunt n'est actuellement en cours.
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

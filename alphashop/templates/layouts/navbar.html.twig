@@ -17,10 +17,10 @@
             Catégories
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Alpha Camp</a></li>
-            <li><a class="dropdown-item" href="#">Alpha Fight Club</a></li>
+            <li><a class="dropdown-item" href="{{ path('app_book_index') }}">Catalogue</a></li>
+            <li><a class="dropdown-item" href="{{ path('app_emprunt_en_cours') }}">Mes emprunts</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Gigachad Face Classroom</a></li>
+            <li><a class="dropdown-item" href="">Gigachad Face Classroom</a></li>
           </ul>
         </li>
         {% if is_granted("ROLE_ADMIN") %}
@@ -29,8 +29,8 @@
             ADMIN
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ path('app_book_index') }}">Liste des livres</a></li>
             <li><a class="dropdown-item" href="{{ path('app_book_index') }}">Voir livres</a></li>
+            <li><a class="dropdown-item" href="{{ path('app_emprunt_en_cours') }}">Liste des emprunts</a></li>
             <li><a class="dropdown-item" href="{{ path('app_book_new') }}">Ajouter un livre</a></li>
             <li><a class="dropdown-item" href="">Produits</a></li>
             <li><hr class="dropdown-divider"></li>

@@ -1,20 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello EmpruntController!{% endblock %}
+{% block title %}{{ titre_page }}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="container mt-4">
+    <h1>{{ titre_page }}</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <table class="table table-striped mt-4">
+        <thead>
+            <tr>
+                <th>Livre</th>
+                <th>Emprunteur</th>
+                <th>Date d'emprunt</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for emprunt in emprunts %}
+            <tr>
+                {# On accède au titre via la relation : emprunt -> book -> titre #}
+                <td>{{ emprunt.book.titre }}</td>
+                <td>{{ emprunt.user.nom }}</td>
+                <td>{{ emprunt.dateEmprunt|date('d/m/Y H:i') }}</td>
+                <td>
+                    {% if emprunt.dateRetour is null %}
+                        <span class="badge" style="background-color: #ffc107;">EN COURS</span>
+                    {% else %}
+                        <span class="badge" style="background-color: #28a745; color: white;">RENDU</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4" class="text-center">Aucun emprunt trouvé.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/wamp64/www/E-COM TD/alphashop/src/Controller/EmpruntController.php</code></li>
-        <li>Your template at <code>C:/wamp64/www/E-COM TD/alphashop/templates/emprunt/index.html.twig</code></li>
-    </ul>
+    <a href="{{ path('app_book_index') }}" class="btn btn-secondary">Retour au catalogue</a>
 </div>
 {% endblock %}

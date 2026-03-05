@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/book')]
 final class BookController extends AbstractController
@@ -23,6 +24,7 @@ final class BookController extends AbstractController
     }
 
     #[Route('/new', name: 'app_book_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $book = new Book();
@@ -51,6 +53,7 @@ final class BookController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_book_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')] // Seul l'admin peut modifier
     public function edit(Request $request, Book $book, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(BookType::class, $book);

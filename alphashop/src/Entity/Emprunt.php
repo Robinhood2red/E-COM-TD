@@ -22,6 +22,13 @@ class Emprunt
     #[ORM\Column(length: 20, options: ["default" => "en_cours"])]
     private ?string $statut = 'en_cours';
 
+    #[ORM\ManyToOne(inversedBy: 'emprunts')]
+    private ?Book $book = null;
+
+    #[ORM\ManyToOne(inversedBy: 'emprunts')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
+
     public function __construct()
     {
         // Initialisation automatique lors de la création de l'objet
@@ -66,6 +73,30 @@ class Emprunt
     public function setStatut(string $statut): static
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getBook(): ?Book
+    {
+        return $this->book;
+    }
+
+    public function setBook(?Book $book): static
+    {
+        $this->book = $book;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

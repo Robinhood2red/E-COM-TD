@@ -20,7 +20,7 @@
             <tr>
                 {# On accède au titre via la relation : emprunt -> book -> titre #}
                 <td>{{ emprunt.book.titre }}</td>
-                <td>{{ emprunt.user.nom }}</td>
+                <td>{{ emprunt.user ? emprunt.user.nom : 'Utilisateur inconnu' }}</td>
                 <td>{{ emprunt.dateEmprunt|date('d/m/Y H:i') }}</td>
                 <td>
                     {% if emprunt.dateRetour is null %}

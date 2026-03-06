@@ -1,0 +1,23 @@
+{{ form_start(form) }}
+    
+    <label class="mt-2" for="user_nom">Nom de l'utilisateur</label>
+    {{ form_widget(form.nom, {attr:{'class': 'form-control', 'placeholder': 'Entrez le nom'}}) }}
+    {{ form_errors(form.nom) }}
+
+    <label class="mt-2" for="user_email">Adresse Email</label>
+    {{ form_widget(form.email, {attr:{'class': 'form-control', 'placeholder': 'exemple@mail.com'}}) }}
+    {{ form_errors(form.email) }}
+
+    <label class="mt-2" for="user_telephone">Téléphone</label>
+    {{ form_widget(form.telephone, {attr:{'class': 'form-control', 'placeholder': '06...'}}) }}
+    {{ form_errors(form.telephone) }}
+
+    <label class="mt-2" for="user_password">Mot de passe</label>
+    {{ form_widget(form.password, {attr:{'class': 'form-control'}}) }}
+    {{ form_errors(form.password) }}
+
+    <button class="btn btn-success mt-3 mb-3">
+        <i class="fas fa-save"></i> {{ button_label|default('Sauvegarder l’utilisateur') }}
+    </button>
+
+{{ form_end(form) }}

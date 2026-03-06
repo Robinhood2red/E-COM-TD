@@ -1,4 +1,13 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_row(form.titre, {label: 'Titre du livre',attr: {'class': 'form-control mb-3', 'placeholder': 'Ex: Le Petit Prince'}}) }}
+    {{ form_row(form.auteur, {label: 'Auteur',attr: {'class': 'form-control mb-3', 'placeholder': 'Nom de l\'auteur'}}) }}
+    {{ form_row(form.isbn, {label: 'Code ISBN',attr: {'class': 'form-control mb-3', 'placeholder': 'Ex: 9782070612758'}}) }}
+    {% if button_label != 'Modifier' %}{{ form_row(form.stock, {label: 'Quantité en stock',attr: {'class': 'form-control mb-3'}}) }}
+    {% endif %}
+    
+    {{ form_row(form.image, {attr:{'class': 'form-control mt-4'}}) }}
+
+    <button class="btn btn-success mt-3 mb-3">
+        <i class="bi bi-check-circle"></i> {{ button_label|default('Sauvegarder') }}
+    </button>
 {{ form_end(form) }}

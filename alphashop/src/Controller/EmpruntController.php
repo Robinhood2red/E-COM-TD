@@ -49,35 +49,31 @@ final class EmpruntController extends AbstractController
 #[Route('/emprunt/new/{id}', name: 'app_emprunt_new')]
     public function new(Book $book, EntityManagerInterface $entityManager): Response
     {
-        // 1. Vérifier si l'utilisateur est connecté (Critère de sécurité)
         $user = $this->getUser();
         if (!$user) {
             $this->addFlash('danger', 'Vous devez être connecté pour emprunter un livre.');
             return $this->redirectToRoute('app_login');
         }
 
-        // 2. Vérifier si le livre est disponible (Critère OBLIGATOIRE)
+        // si le livre est disponible (Critère OBLIGATOIRE)
         if ($book->getStock() <= 0) {
             $this->addFlash('danger', 'Livre non disponible'); // Message flash ROUGE
             return $this->redirectToRoute('app_book_index');
         }
 
-        // 3. Créer l'emprunt
+        // Pour créer l'emprunt
         $emprunt = new Emprunt();
         $emprunt->setBook($book);
         $emprunt->setUser($user);
         $emprunt->setDateEmprunt(new \DateTimeImmutable());
         // On ne définit pas de dateRetour car l'emprunt est "EN_COURS"
 
-        // 4. Décrémenter le stock du livre
         $book->setStock($book->getStock() - 1);
 
-        // 5. Enregistrer en base de données
         $entityManager->persist($emprunt);
         $entityManager->flush();
 
-        // 6. Message de succès et redirection
-        $this->addFlash('success', 'Emprunt enregistré !'); // Message flash VERT
+        $this->addFlash('success', 'Emprunt enregistré !');
         return $this->redirectToRoute('app_emprunt_en_cours');
     }
 

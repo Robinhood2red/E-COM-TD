@@ -25,8 +25,8 @@ class Emprunt
     #[ORM\ManyToOne(inversedBy: 'emprunts')]
     private ?Book $book = null;
 
-    #[ORM\ManyToOne(inversedBy: 'emprunts')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'emprunts')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')] // Ajoute onDelete: 'CASCADE'
     private ?User $user = null;
 
     public function __construct()

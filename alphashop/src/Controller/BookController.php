@@ -7,6 +7,8 @@ use App\Form\BookType;
 use App\Repository\BookRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -59,8 +61,31 @@ final class BookController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+
+            // Si une nouvelle image a été uploadée
+            if ($imageFile) {
+                // 1. On crée un nom unique pour éviter les doublons (ex: 65f123.jpg)
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+
+                // 2. On déplace le fichier dans le dossier public/images
+                try {
+                    $imageFile->move(
+                        $this->getParameter('kernel.project_dir') . '/public/images',
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... gérer l'erreur si le déplacement échoue
+                }
+
+                // 3. On enregistre le NOM du fichier en base de données
+                $book->setImage($newFilename);
+            }
+
             $entityManager->flush();
 
+            $this->addFlash('success', 'Le livre a bien été modifié !');
             return $this->redirectToRoute('app_book_index', [], Response::HTTP_SEE_OTHER);
         }
 

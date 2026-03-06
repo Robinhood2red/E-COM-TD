@@ -3,7 +3,8 @@
     {{ form_row(form.auteur, {label: 'Auteur',attr: {'class': 'form-control mb-3', 'placeholder': 'Nom de l\'auteur'}}) }}
     {{ form_row(form.isbn, {label: 'Code ISBN',attr: {'class': 'form-control mb-3', 'placeholder': 'Ex: 9782070612758'}}) }}
     
-    {% if button_label != 'Modifier' %}
+    {# On vérifie si l'ID du livre est vide pour afficher le stock #}
+    {% if form.vars.data.id is null %}
         {{ form_row(form.stock, {label: 'Quantité en stock',attr: {'class': 'form-control mb-3'}}) }}
     {% endif %}
     
@@ -12,4 +13,5 @@
     <button class="btn btn-success mt-3 mb-3">
         <i class="bi bi-check-circle"></i> {{ button_label|default('Sauvegarder') }}
     </button>
+    {{ form_row(form._token) }}
 {{ form_end(form, {'render_rest': false}) }}

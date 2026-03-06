@@ -1,23 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Book{% endblock %}
+{% block title %}Modifier - {{ book.titre }}{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1>Modifier livre</h1>
+<div class="container mt-5 pb-5">
+    {# Fil d'Ariane #}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_book_index') }}">Catalogue</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_book_show', {'id': book.id}) }}">{{ book.titre }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Modification</li>
+        </ol>
+    </nav>
 
-    {% if book.image %}
-        <div class="mb-3">
-            <p>Image actuelle :</p>
-            <img src="{{ asset('/images/' ~ book.image) }}" width="100" class="img-thumbnail">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark py-3">
+                    <h2 class="h4 mb-0"><i class="bi bi-pencil-square"></i> Modifier le livre</h2>
+                </div>
+                
+                <div class="card-body p-4">
+                    <div class="row mb-4 align-items-center">
+                        <div class="col-md-3">
+                            <p class="fw-bold mb-0">Image actuelle :</p>
+                        </div>
+                        <div class="col-md-9">
+                            {% if book.image %}
+                                <img src="{{ asset('/images/' ~ book.image) }}" 
+                                     alt="Aperçu" 
+                                     class="img-thumbnail shadow-sm" 
+                                     style="max-height: 200px;">
+                            {% else %}
+                                <span class="text-muted italic">Aucune image configurée</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr class="mb-4">
+
+                    {# Inclusion du formulaire (BookType) #}
+                    {{ include('book/_form.html.twig', {'button_label': 'Enregistrer les modifications'}) }}
+
+                    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                        <a class="btn btn-link text-secondary p-0" href="{{ path('app_book_index') }}">
+                            <i class="bi bi-arrow-left"></i> Retour au catalogue
+                        </a>
+
+                        {# Suppression isolée pour éviter les erreurs #}
+                        <div class="text-end">
+                            {{ include('book/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    {% endif %}
-
-    {{ include('book/_form.html.twig', {'button_label': 'Modifier'}) }}
-
-    {{ include('book/_delete_form.html.twig') }}
-
-    <a class="btn btn-light mt-3" href="{{ path('app_book_index') }}">back to list</a>
-    
+    </div>
 </div>
 {% endblock %}

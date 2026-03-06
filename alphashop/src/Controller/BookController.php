@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\AddProductHistory;
 use App\Entity\Book;
+use App\Form\AddProductHistoryType;
 use App\Form\BookType;
 use App\Repository\BookRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -118,7 +120,7 @@ final class BookController extends AbstractController
                 if (method_exists($stockHistory, 'setBook')) {
                     $stockHistory->setBook($book);
                 } else {
-                    $stockHistory->setProduct($book); 
+                    $stockHistory->setBook($book); 
                 }
 
                 $entityManager->persist($stockHistory);

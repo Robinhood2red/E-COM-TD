@@ -50,9 +50,19 @@
 
                 {# Btn Emprunter (plus logique pour un livre) #}
                 <div class="d-grid gap-2 d-md-flex mt-5">
-                    <button class="btn btn-success btn-lg px-5 py-3 shadow-sm rounded-pill" {% if product.stock <= 0 %}disabled{% endif %}>
+                    {% if product.stock > 0 %}
+                        {# On transforme le <button> en <a> et on utilise 'product.id' #}
+                        <a href="{{ path('app_emprunt_new', {'id': product.id}) }}" 
+                        class="btn btn-success btn-lg px-5 py-3 shadow-sm rounded-pill">
                         Emprunter ce livre
-                    </button>
+                        </a>
+                    {% else %}
+                        {# Si pas de stock, on affiche un bouton grisé #}
+                        <button class="btn btn-secondary btn-lg px-5 py-3 shadow-sm rounded-pill" disabled>
+                        Victime de son succès (Épuisé)
+                        </button>
+                    {% endif %}
+
                     <button class="btn btn-outline-danger btn-lg px-4 py-3 rounded-pill">
                         <i class="bi bi-heart-fill"></i>
                     </button>

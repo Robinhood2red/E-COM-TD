@@ -16,10 +16,7 @@
         <div class="col-md-6">
             <div class="product-image-container bg-light shadow-sm rounded-4 overflow-hidden text-center">
                 {# On utilise un placeholder basé sur le titre car le champ image n'existe pas dans l'entité Book #}
-                <img src="https://via.placeholder.com/500x700?text={{ product.titre|url_encode }}" 
-                    class="img-fluid w-100 zoom-img" 
-                    alt="{{ product.titre }}"
-                    style="max-height: 500px; object-fit: contain;">
+                <img src="{{ asset('/images/' ~ product.image) }}" class="card-img-top img-fluid" alt="{{ product.titre }}">
             </div>
         </div>
 

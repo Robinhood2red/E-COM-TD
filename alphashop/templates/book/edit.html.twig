@@ -6,12 +6,12 @@
 <div class="container">
     <h1>Modifier livre</h1>
 
-    {# {% if book.image %}
+    {% if book.image %}
         <div class="mb-3">
             <p>Image actuelle :</p>
             <img src="{{ asset('/images/' ~ book.image) }}" width="100" class="img-thumbnail">
         </div>
-    {% endif %} #}
+    {% endif %}
 
     {{ include('book/_form.html.twig', {'button_label': 'Modifier'}) }}
 

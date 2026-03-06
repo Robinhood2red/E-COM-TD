@@ -26,6 +26,7 @@ final class BookController extends AbstractController
     }
 
     #[Route('/new', name: 'app_book_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $book = new Book();
@@ -66,10 +67,10 @@ final class BookController extends AbstractController
 
             // Si une nouvelle image a été uploadée
             if ($imageFile) {
-                // 1. On crée un nom unique pour éviter les doublons (ex: 65f123.jpg)
+                // Création un nom unique(ex: 65f123.jpg)
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
 
-                // 2. On déplace le fichier dans le dossier public/images
+                // déplace le fichier dans le dossier public/images
                 try {
                     $imageFile->move(
                         $this->getParameter('kernel.project_dir') . '/public/images',
@@ -78,8 +79,6 @@ final class BookController extends AbstractController
                 } catch (FileException $e) {
                     // ... gérer l'erreur si le déplacement échoue
                 }
-
-                // 3. On enregistre le NOM du fichier en base de données
                 $book->setImage($newFilename);
             }
 
@@ -94,7 +93,48 @@ final class BookController extends AbstractController
             'form' => $form,
         ]);
     }
+    #[Route('/{id}/stock/add', name: 'app_book_stock_add', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function stockAdd(Book $book, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // On crée l'entrée d'historique
+        $stockHistory = new AddProductHistory();
+        $form = $this->createForm(AddProductHistoryType::class, $stockHistory);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $addedQuantity = $stockHistory->getQuantity();
+
+            if ($addedQuantity > 0) {
+                // 1. On met à jour le stock du livre directement
+                $currentStock = $book->getStock();
+                $book->setStock($currentStock + $addedQuantity);
+
+                // 2. On configure l'historique
+                $stockHistory->setCreatedAt(new \DateTimeImmutable()); 
+                
+                // ATTENTION : Vérifie si dans ton entité AddProductHistory 
+                // la méthode est setBook() ou setProduct()
+                if (method_exists($stockHistory, 'setBook')) {
+                    $stockHistory->setBook($book);
+                } else {
+                    $stockHistory->setProduct($book); 
+                }
+
+                $entityManager->persist($stockHistory);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Le stock de "' . $book->getTitre() . '" a été mis à jour !');
+
+                return $this->redirectToRoute('app_book_index');
+            }
+        }
+
+        return $this->render('book/addStock.html.twig', [
+            'form' => $form->createView(),
+            'book' => $book
+        ]);
+    }
     #[Route('/{id}', name: 'app_book_delete', methods: ['POST'])]
     public function delete(Request $request, Book $book, EntityManagerInterface $entityManager): Response
     {

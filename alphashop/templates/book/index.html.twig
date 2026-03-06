@@ -52,6 +52,7 @@
                     {# ACCÈS ADMIN : Seul l'admin voit le bouton Modifier #}
                     {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ path('app_book_edit', {'id': book.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                        <a class="btn btn-outline-info" href="{{ path('app_product_stock_add', {'id': book.id}) }}">Ajouter du stock</a>
                     {% endif %}
                 </td>
             </tr>
